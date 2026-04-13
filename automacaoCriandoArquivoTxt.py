@@ -19,10 +19,16 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    min-height: 100vh;
+}
+.pagina {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    flex-direction: column;
+    padding: 24px;
+    box-sizing: border-box;
 }
 .caixa {
     background: white;
@@ -69,20 +75,37 @@ button:hover {
     font-weight: bold;
     color: #0f172a;
 }
+footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #475569;
+    font-size: 14px;
+}
+footer a {
+    color: #1d4ed8;
+    text-decoration: none;
+    font-weight: bold;
+}
 </style>
 </head>
 
 <body>
-<div class="caixa">
-    <h1>Automação com Python</h1>
-    <p>Digite um texto para o seu arquivo (.txt):</p>
+<div class="pagina">
+    <div class="caixa">
+        <h1>Automação com Python</h1>
+        <p>Digite um texto para o seu arquivo (.txt):</p>
 
-    <input type="text" id="texto_usuario" placeholder="Digite aqui">
+        <input type="text" id="texto_usuario" placeholder="Digite aqui">
 
-    <button onclick="baixarTxt()">Baixar TXT</button>
-    <button onclick="baixarPdf()">Baixar PDF</button>
+        <button onclick="baixarTxt()">Baixar TXT</button>
+        <button onclick="baixarPdf()">Baixar PDF</button>
 
-    <p id="resultado"></p>
+        <p id="resultado"></p>
+    </div>
+
+    <footer>
+        Feito por <a href="https://ellsouza.github.io/ellen-portfolio/" target="_blank">Ellen Souza</a>
+    </footer>
 </div>
 
 <script>
@@ -125,3 +148,4 @@ def criar_pdf():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
