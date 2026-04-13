@@ -25,5 +25,5 @@ Aplicação web simples desenvolvida com Python e Flask para gerar arquivos `.tx
 
 ## Como executar o projeto
 
-1. Clone o repositório:
+1. Clone o repositório: git clone https://github.com/ellsouza/flask-file-generator.git
 
