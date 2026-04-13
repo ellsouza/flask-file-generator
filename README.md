@@ -18,7 +18,7 @@ Aplicação web simples desenvolvida com Python e Flask para gerar arquivos `.tx
 
 ## Estrutura do projeto
 
-.
+
 ├── automacaoCriandoArquivoTxt.py  
 ├── requirements.txt  
 └── README.md  
