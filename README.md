@@ -1,26 +1,29 @@
 # Flask File Generator
 
-Aplicação simples em Python com Flask para gerar e baixar um arquivo `.txt` via interface web.
+Aplicação web simples desenvolvida com Python e Flask para gerar arquivos `.txt` e `.pdf` a partir de um texto inserido pelo usuário.
 
-## Funcionalidade
+## Funcionalidades
 
-- Geração automática de arquivo `.txt`
-- Download direto no navegador
-- Interface web básica
+- Entrada de texto pelo usuário na interface
+- Geração de arquivo `.txt` com o conteúdo informado
+- Geração de arquivo `.pdf` com o mesmo conteúdo
+- Download automático dos arquivos
 
-## Tecnologias
+## Tecnologias utilizadas
 
 - Python
 - Flask
-- HTML / CSS
+- HTML e CSS
+- ReportLab (para geração de PDF)
 
-## Estrutura
+## Estrutura do projeto
 
-
-├── app.py  
+.
+├── automacaoCriandoArquivoTxt.py  
 ├── requirements.txt  
 └── README.md  
 
-## Execução
+## Como executar o projeto
 
-Clone o repositório: git clone https://github.com/ellsouza/flask-file-generator.git
+1. Clone o repositório:
+
