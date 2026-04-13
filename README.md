@@ -16,11 +16,11 @@ Aplicação simples em Python com Flask para gerar e baixar um arquivo `.txt` vi
 
 ## Estrutura
 
-.
+
 ├── app.py  
 ├── requirements.txt  
 └── README.md  
 
 ## Execução
 
-Clone o repositório:
+Clone o repositório: git clone https://github.com/ellsouza/flask-file-generator.git
