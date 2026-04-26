@@ -1,9 +1,10 @@
 from flask import Flask, send_file, request
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfbase.pdfmetrics import stringWidth
 
 app = Flask(__name__)
+
 
 def _wrap_text(texto: str, *, font_name: str, font_size: int, max_width: float) -> list[str]:
     linhas: list[str] = []
@@ -27,7 +28,6 @@ def _wrap_text(texto: str, *, font_name: str, font_size: int, max_width: float) 
                 atual = palavra
                 continue
 
-            # Palavra maior que a largura: quebra por caracteres
             pedaco = ""
             for ch in palavra:
                 tentativa_ch = pedaco + ch
@@ -207,6 +207,7 @@ def criar_pdf():
 
         pdf.drawString(x, y, linha)
         y -= line_height
+
     pdf.save()
 
     return send_file("arquivo_criado_pelo_python.pdf", as_attachment=True)
@@ -214,4 +215,3 @@ def criar_pdf():
 
 if __name__ == "__main__":
     app.run(debug=True)
-

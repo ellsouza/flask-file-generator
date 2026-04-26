@@ -18,12 +18,14 @@ Aplicação web simples desenvolvida com Python e Flask para gerar arquivos `.tx
 
 ## Estrutura do projeto
 
-
-├── automacaoCriandoArquivoTxt.py  
-├── requirements.txt  
-└── README.md  
+├── automacaoCriandoArquivoTxt.py
+├── requirements.txt
+└── README.md
 
 ## Como executar o projeto
 
-1. Clone o repositório: git clone https://github.com/ellsouza/flask-file-generator.git
-
+1. Clone o repositório: `git clone https://github.com/ellsouza/flask-file-generator.git`
+2. Entre na pasta do projeto: `cd flask-file-generator`
+3. Instale as dependências: `pip install -r requirements.txt`
+4. Rode o servidor: `python automacaoCriandoArquivoTxt.py`
+5. Acesse no navegador: `http://127.0.0.1:5000`
