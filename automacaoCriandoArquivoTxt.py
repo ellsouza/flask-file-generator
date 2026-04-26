@@ -1,7 +1,49 @@
 from flask import Flask, send_file, request
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase.pdfmetrics import stringWidth
 
 app = Flask(__name__)
+
+def _wrap_text(texto: str, *, font_name: str, font_size: int, max_width: float) -> list[str]:
+    linhas: list[str] = []
+
+    for linha in (texto or "").splitlines() or [""]:
+        if not linha.strip():
+            linhas.append("")
+            continue
+
+        palavras = linha.split()
+        atual = ""
+
+        for palavra in palavras:
+            tentativa = palavra if not atual else f"{atual} {palavra}"
+            if stringWidth(tentativa, font_name, font_size) <= max_width:
+                atual = tentativa
+                continue
+
+            if atual:
+                linhas.append(atual)
+                atual = palavra
+                continue
+
+            # Palavra maior que a largura: quebra por caracteres
+            pedaco = ""
+            for ch in palavra:
+                tentativa_ch = pedaco + ch
+                if stringWidth(tentativa_ch, font_name, font_size) <= max_width:
+                    pedaco = tentativa_ch
+                else:
+                    if pedaco:
+                        linhas.append(pedaco)
+                    pedaco = ch
+            if pedaco:
+                atual = pedaco
+
+        if atual:
+            linhas.append(atual)
+
+    return linhas
 
 
 @app.route("/")
@@ -45,7 +87,7 @@ h1 {
 p {
     color: #475569;
 }
-input {
+input, textarea {
     width: 300px;
     max-width: 100%;
     padding: 10px 12px;
@@ -53,6 +95,7 @@ input {
     border-radius: 8px;
     font-size: 15px;
     box-sizing: border-box;
+    resize: vertical;
 }
 button {
     display: block;
@@ -95,7 +138,7 @@ footer a {
         <h1>Automação com Python</h1>
         <p>Digite um texto para o seu arquivo (.txt):</p>
 
-        <input type="text" id="texto_usuario" placeholder="Digite aqui">
+        <textarea id="texto_usuario" placeholder="Digite aqui" rows="5"></textarea>
 
         <button onclick="baixarTxt()">Baixar TXT</button>
         <button onclick="baixarPdf()">Baixar PDF</button>
@@ -139,8 +182,31 @@ def criar_arquivo():
 def criar_pdf():
     texto = request.args.get("texto", "")
 
-    pdf = canvas.Canvas("arquivo_criado_pelo_python.pdf")
-    pdf.drawString(100, 750, texto)
+    page_width, page_height = A4
+    margin = 50
+    font_name = "Helvetica"
+    font_size = 12
+    line_height = 16
+
+    pdf = canvas.Canvas("arquivo_criado_pelo_python.pdf", pagesize=A4)
+    pdf.setFont(font_name, font_size)
+
+    max_width = page_width - (2 * margin)
+    x = margin
+    y = page_height - margin
+
+    for linha in _wrap_text(texto, font_name=font_name, font_size=font_size, max_width=max_width):
+        if y < margin:
+            pdf.showPage()
+            pdf.setFont(font_name, font_size)
+            y = page_height - margin
+
+        if linha == "":
+            y -= line_height
+            continue
+
+        pdf.drawString(x, y, linha)
+        y -= line_height
     pdf.save()
 
     return send_file("arquivo_criado_pelo_python.pdf", as_attachment=True)
