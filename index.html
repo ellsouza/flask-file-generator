@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar Arquivo com Python</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        min-height: 100vh;
+      }
+      .pagina {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+      .caixa {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        text-align: center;
+        width: 360px;
+      }
+      h1 {
+        color: #1d4ed8;
+        margin-bottom: 10px;
+      }
+      p {
+        color: #475569;
+      }
+      input,
+      textarea {
+        width: 300px;
+        max-width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 15px;
+        box-sizing: border-box;
+        resize: vertical;
+      }
+      button {
+        display: block;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 15px auto 0;
+        width: 200px;
+        max-width: 100%;
+      }
+      button:hover {
+        background: #1e40af;
+      }
+      #resultado {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #0f172a;
+        min-height: 1.2em;
+      }
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #475569;
+        font-size: 14px;
+      }
+      footer a {
+        color: #1d4ed8;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="pagina">
+      <div class="caixa">
+        <h1>Automação com Python</h1>
+        <p>Digite um texto para o seu arquivo (.txt) e/ou (.pdf):</p>
+
+        <textarea id="texto_usuario" placeholder="Digite aqui" rows="5"></textarea>
+
+        <button type="button" id="btn-txt">Baixar TXT</button>
+        <button type="button" id="btn-pdf">Baixar PDF</button>
+
+        <p id="resultado" aria-live="polite"></p>
+      </div>
+
+      <footer>
+        Feito por
+        <a href="https://ellsouza.github.io/ellen-portfolio/" target="_blank" rel="noopener noreferrer">Ellen Souza</a>
+      </footer>
+    </div>
+
+    <script>
+      const textarea = document.querySelector("#texto_usuario");
+      const result = document.querySelector("#resultado");
+      const btnTxt = document.querySelector("#btn-txt");
+      const btnPdf = document.querySelector("#btn-pdf");
+
+      const setResult = (message) => {
+        result.textContent = message || "";
+      };
+
+      const downloadBlob = (blob, filename) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      };
+
+      const baixarTxt = () => {
+        const texto = textarea.value || "";
+        const blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
+        downloadBlob(blob, "arquivo_criado_pelo_python.txt");
+        setResult("TXT gerado com sucesso.");
+      };
+
+      const baixarPdf = async () => {
+        const texto = textarea.value || "";
+        if (!window.jspdf?.jsPDF) {
+          setResult("Não foi possível carregar a biblioteca de PDF. Verifique sua conexão e tente novamente.");
+          return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+        const margin = 50;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const maxWidth = pageWidth - margin * 2;
+
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(12);
+
+        const lines = doc.splitTextToSize(texto, maxWidth);
+        let y = margin;
+        const lineHeight = 16;
+
+        for (const line of lines.length ? lines : [""]) {
+          if (y > pageHeight - margin) {
+            doc.addPage();
+            y = margin;
+          }
+          doc.text(String(line), margin, y);
+          y += lineHeight;
+        }
+
+        doc.save("arquivo_criado_pelo_python.pdf");
+        setResult("PDF gerado com sucesso.");
+      };
+
+      btnTxt.addEventListener("click", baixarTxt);
+      btnPdf.addEventListener("click", baixarPdf);
+      textarea.addEventListener("input", () => setResult(""));
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+  </body>
+</html>
+
